@@ -717,7 +717,16 @@ static int ftec_probe(struct hid_device *hdev, const struct hid_device_id *id)
 	memset(&drv_data->client, 0, sizeof(drv_data->client));
 	drv_data->quirks = id->driver_data;
 	drv_data->min_range = 90;
-	drv_data->max_range = 900;
+	drv_data->max_range = 1090; // technically max_range is 1080, but 1090 is used as 'auto'
+	if (hdev->product == CLUBSPORT_V2_WHEELBASE_DEVICE_ID || 
+	    hdev->product == CLUBSPORT_V25_WHEELBASE_DEVICE_ID ||
+	    hdev->product == CSR_ELITE_WHEELBASE_DEVICE_ID) {
+		drv_data->max_range = 900;
+	} else if (hdev->product == PODIUM_WHEELBASE_DD1_DEVICE_ID ||
+		   hdev->product == PODIUM_WHEELBASE_DD2_DEVICE_ID ||
+		   hdev->product == CSL_DD_WHEELBASE_DEVICE_ID) {
+		drv_data->max_range = 2530;  // technically max_range is 2520, but 2530 is used as 'auto'
+	}
 
 	hid_set_drvdata(hdev, (void *)drv_data);
 
